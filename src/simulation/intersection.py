@@ -1,5 +1,4 @@
 # src/simulation/intersection.py
-import math
 import random
 
 
@@ -308,13 +307,12 @@ class Intersection:
         )
         pygame.draw.rect(surface, road_color, vertical_road)
 
-        marking_color = (252, 252, 252)
         dashed_color = (250, 250, 250)
         solid_color = (228, 228, 228)
 
         lane_step = self.lane_width * scale
-        left_edge = center_x - road_width / 2
-        top_edge = center_y - road_width / 2
+        center_x - road_width / 2
+        center_y - road_width / 2
 
         # Solid center separators between opposing directions
         pygame.draw.line(
