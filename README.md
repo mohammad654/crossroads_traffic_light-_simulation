@@ -16,6 +16,13 @@
 ![Tests](https://img.shields.io/badge/Tests-23%20passing-success)
 ![Coverage](https://img.shields.io/badge/Coverage-26%25-orange)
 
+## Demo
+
+<video src="Crossroads%20Traffic%20Light%20Simulation.mp4" controls width="900"></video>
+
+If the inline player is not supported in your viewer, open the demo directly:
+[Crossroads Traffic Light Simulation.mp4](Crossroads%20Traffic%20Light%20Simulation.mp4)
+
 Quick links: [Documentation](docs/ci_cd_suggestions.md) | [Architecture](#4-architecture--how-it-works) | [Issues](../../issues) | [Contributing](#15-contributing-guidelines)
 
 ## 1. Overview
