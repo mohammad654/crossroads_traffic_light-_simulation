@@ -289,9 +289,7 @@ class TrafficLightController:
             best_duration = self.ml_candidate_greens[0]
             best_value = float("-inf")
             for candidate in self.ml_candidate_greens:
-                bonus = (2.0 * (exploration**0.5)) / (
-                    self.ml_counts[candidate] ** 0.5
-                )
+                bonus = (2.0 * (exploration**0.5)) / (self.ml_counts[candidate] ** 0.5)
                 value = self.ml_scores[candidate] + bonus
                 if value > best_value:
                     best_value = value

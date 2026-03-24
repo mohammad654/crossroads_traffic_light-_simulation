@@ -382,13 +382,13 @@ class Renderer:
         self.sliders[0].input_text = f"{self.sliders[0].value:.2f}"
         self.sliders[1].value = self.simulation.traffic_density_factor
         self.sliders[1].input_text = f"{self.sliders[1].value:.2f}"
-        self.sliders[
-            2
-        ].value = self.simulation.traffic_controller.default_phase_durations["ns_green"]
+        self.sliders[2].value = (
+            self.simulation.traffic_controller.default_phase_durations["ns_green"]
+        )
         self.sliders[2].input_text = f"{self.sliders[2].value:.2f}"
-        self.sliders[
-            3
-        ].value = self.simulation.traffic_controller.default_phase_durations["ew_green"]
+        self.sliders[3].value = (
+            self.simulation.traffic_controller.default_phase_durations["ew_green"]
+        )
         self.sliders[3].input_text = f"{self.sliders[3].value:.2f}"
 
     def apply_slider_value(self, slider):
@@ -1813,9 +1813,11 @@ class Renderer:
             (f"Avg Speed: {dashboard['avg_speed']:.1f} m/s", self.theme["muted"]),
             (
                 f"Close Calls: {dashboard['close_calls']}   Pedestrians: {dashboard['pedestrians']}",
-                self.theme["warn"]
-                if dashboard["close_calls"] > 0
-                else self.theme["muted"],
+                (
+                    self.theme["warn"]
+                    if dashboard["close_calls"] > 0
+                    else self.theme["muted"]
+                ),
             ),
             (f"Green dirs: {active_lights}", self.theme["ok"]),
             (f"Phase: {phase_name}  {phase_rem:.1f}s left", self.theme["accent"]),
