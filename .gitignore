@@ -1,0 +1,116 @@
+# ------------------------------
+# Python bytecode and extensions
+# ------------------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*$py.class
+.Python
+*.so
+
+# ------------------------------
+# Build and distribution artifacts
+# ------------------------------
+build/
+dist/
+downloads/
+develop-eggs/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+pip-wheel-metadata/
+*.egg
+*.egg-info/
+
+# ------------------------------
+# Virtual environments
+# ------------------------------
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# ------------------------------
+# Testing, coverage, and caches
+# ------------------------------
+.pytest_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.tox/
+.nox/
+.cache/
+.hypothesis/
+.mypy_cache/
+.ruff_cache/
+*.cover
+
+# ------------------------------
+# Type checker and notebooks
+# ------------------------------
+.pyre/
+.dmypy.json
+dmypy.json
+.ipynb_checkpoints/
+
+# ------------------------------
+# Environment and secrets
+# ------------------------------
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+secrets.json
+config/local.py
+settings/local.py
+
+# ------------------------------
+# IDE and editor files
+# ------------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ------------------------------
+# OS-specific files
+# ------------------------------
+.DS_Store
+Thumbs.db
+
+# ------------------------------
+# Logs and temporary files
+# ------------------------------
+logs/
+*.log
+*.tmp
+*.temp
+tmp/
+temp/
+
+# ------------------------------
+# Database files
+# ------------------------------
+*.db
+*.sqlite
+*.sqlite3
+
+# ------------------------------
+# Project-specific generated artifacts
+# ------------------------------
+data/exports/
+data/scenarios/
+src/data/exports/
+src/data/scenarios/

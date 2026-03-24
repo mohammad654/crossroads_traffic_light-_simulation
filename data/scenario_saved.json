@@ -1,0 +1,37 @@
+{
+  "traffic_density_factor": 1.8,
+  "simulation_speed_factor": 4.0,
+  "rush_hour_mode": true,
+  "weather_mode": "rain",
+  "obstacles": [
+    {
+      "position": [
+        89.48550224935762,
+        108.43482711718471
+      ],
+      "radius": 10.0,
+      "kind": "obstacle",
+      "created_at": 62.423999999999864
+    },
+    {
+      "position": [
+        109.16266723536881,
+        102.60187321633506
+      ],
+      "radius": 10.0,
+      "kind": "obstacle",
+      "created_at": 90.35199999999979
+    },
+    {
+      "position": [
+        84.41914248558552,
+        106.75249334025835
+      ],
+      "radius": 10.0,
+      "kind": "obstacle",
+      "created_at": 110.61199999999974
+    }
+  ],
+  "algorithm": "time_based",
+  "manual_override_active": false
+}

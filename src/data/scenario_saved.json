@@ -1,0 +1,28 @@
+{
+  "traffic_density_factor": 1.0,
+  "simulation_speed_factor": 1.0,
+  "rush_hour_mode": false,
+  "weather_mode": "fog",
+  "obstacles": [
+    {
+      "position": [
+        90.59233218595267,
+        91.93550071436889
+      ],
+      "radius": 10.0,
+      "kind": "obstacle",
+      "created_at": 20.296999999999816
+    },
+    {
+      "position": [
+        101.01076642756118,
+        96.8599464008243
+      ],
+      "radius": 10.0,
+      "kind": "obstacle",
+      "created_at": 61.89400000000027
+    }
+  ],
+  "algorithm": "traffic_responsive",
+  "manual_override_active": false
+}

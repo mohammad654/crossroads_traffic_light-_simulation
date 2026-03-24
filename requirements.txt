@@ -1,0 +1,7 @@
+# requirements.txt
+pygame==2.5.2
+numpy==1.26.0
+pymunk==6.6.0
+pillow==10.0.1
+python-dotenv==1.0.1
+rich==13.9.4
