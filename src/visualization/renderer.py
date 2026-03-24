@@ -382,13 +382,13 @@ class Renderer:
         self.sliders[0].input_text = f"{self.sliders[0].value:.2f}"
         self.sliders[1].value = self.simulation.traffic_density_factor
         self.sliders[1].input_text = f"{self.sliders[1].value:.2f}"
-        self.sliders[
-            2
-        ].value = self.simulation.traffic_controller.default_phase_durations["ns_green"]
+        self.sliders[2].value = (
+            self.simulation.traffic_controller.default_phase_durations["ns_green"]
+        )
         self.sliders[2].input_text = f"{self.sliders[2].value:.2f}"
-        self.sliders[
-            3
-        ].value = self.simulation.traffic_controller.default_phase_durations["ew_green"]
+        self.sliders[3].value = (
+            self.simulation.traffic_controller.default_phase_durations["ew_green"]
+        )
         self.sliders[3].input_text = f"{self.sliders[3].value:.2f}"
 
     def apply_slider_value(self, slider):
