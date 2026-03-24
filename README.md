@@ -70,6 +70,7 @@ The simulator combines:
 - [18. Credits & Acknowledgments](#18-credits--acknowledgments)
 - [19. Contact & Support](#19-contact--support)
 - [20. Author](#20-author)
+- [21. Root Configuration Files Explained](#21-root-configuration-files-explained)
 
 ## 3. Prerequisites
 
@@ -604,4 +605,225 @@ See [LICENSE](LICENSE) for full text and permissions.
 **Created by Mohammad Ali Shikhi**
 
 - LinkedIn: [Profile Link](https://www.linkedin.com/in/mohammad-ali-shikhi/)
+
+---
+
+## 21. Root Configuration Files Explained
+
+Every file at the project root serves a specific purpose. This section explains what each one is, what it contains, and why it exists.
+
+---
+
+### `requirements.txt`
+
+**What it is:** The runtime dependency manifest for the project.
+
+**What it does:** Lists every Python package — with exact pinned versions — required to run the simulation.
+
+**Why it exists:** Ensures that every developer, CI runner, and deployment environment installs the exact same package versions, eliminating "works on my machine" problems.
+
+| Package | Version | What it does in this project |
+|---|---|---|
+| `pygame` | 2.5.2 | Renders the simulation window, handles SDL events, manages the 60 FPS loop |
+| `numpy` | 1.26.0 | Provides vectorized numeric operations for simulation computations |
+| `pymunk` | 6.6.0 | 2D physics engine; available for physics-based extensions |
+| `pillow` | 10.0.1 | Handles image/asset loading and transformations |
+| `python-dotenv` | 1.0.1 | Loads `.env` file values into environment variables at startup |
+| `rich` | 13.9.4 | Produces styled and colored terminal menus, tables, and panels in the runner |
+
+---
+
+### `requirements-dev.txt`
+
+**What it is:** Development and testing dependency manifest.
+
+**What it does:** Extends `requirements.txt` with all tools needed for testing, formatting, linting, type-checking, and pre-commit hooks.
+
+**Why it exists:** Keeps the production install lean. Only developers and CI pipelines install this file — the running simulation does not need pytest or black.
+
+```
+-r requirements.txt       # Includes all runtime dependencies first
+```
+
+| Package | Version | What it does in this project |
+|---|---|---|
+| `pytest` | 8.3.5 | Discovers and runs all tests; provides fixture system and assertion introspection |
+| `pytest-cov` | 6.1.1 | Measures code coverage during test runs and produces terminal/XML reports |
+| `pytest-mock` | 3.14.0 | Provides the `mocker` fixture for clean, pytest-idiomatic mocking |
+| `black` | 24.10.0 | Auto-formats all Python code to a consistent, opinionated style |
+| `flake8` | 7.1.1 | Checks code against PEP 8 style rules and flags common mistakes |
+| `mypy` | 1.15.0 | Statically validates type annotations across `src/` and `tests/` |
+| `pylint` | 3.3.6 | Performs deeper structural analysis and checks for code smells |
+| `pre-commit` | 4.2.0 | Manages and runs git hooks that enforce quality before every commit |
+
+---
+
+### `pytest.ini`
+
+**What it is:** The central configuration file for the pytest test runner.
+
+**What it does:** Defines where tests live, which command-line options are always active, and declares all custom test markers.
+
+**Why it exists:** Without it, every developer would need to pass flags manually. With it, running `python -m pytest` from any directory always uses the same settings as CI.
+
+```ini
+[pytest]
+minversion = 7.0          # Fail immediately if an older pytest version is used
+testpaths = tests          # Only look for tests inside the tests/ directory
+addopts = -q --strict-markers   # -q = quiet mode; --strict-markers = error on unknown markers
+markers =
+    unit: fast isolated unit tests
+    integration: component interaction tests
+    functional: end-to-end behavior tests
+    performance: timing and scalability checks
+    security: secret-handling and source-scan checks
+```
+
+| Setting | Purpose |
+|---|---|
+| `minversion = 7.0` | Guards against incompatible older pytest behavior |
+| `testpaths = tests` | Prevents accidental collection of non-test files in src/ |
+| `-q` | Reduces output volume; useful in CI logs |
+| `--strict-markers` | Any test using an undeclared marker immediately fails — typos are caught |
+| `markers` block | Declares the five categories so `-m unit` or `-m security` filtering works |
+
+---
+
+### `.pre-commit-config.yaml`
+
+**What it is:** Configuration for the [pre-commit](https://pre-commit.com/) framework — a manager for git hooks.
+
+**What it does:** Specifies a list of tools that run automatically every time you run `git commit`. If any hook fails, the commit is blocked until the issue is fixed.
+
+**Why it exists:** Catches formatting violations, lint errors, and type problems locally before code ever reaches GitHub. This reduces CI failures and shortens code review cycles.
+
+**How to activate it:**
+```powershell
+pre-commit install        # Installs the hooks into your local .git/hooks/
+pre-commit run --all-files  # Run all hooks manually on the entire codebase
+```
+
+| Hook | Source | What it checks | What happens on failure |
+|---|---|---|---|
+| `black` | `psf/black` @ 24.10.0 | Code formatting — rewrites files to consistent style | Reformats file and blocks commit; re-add and retry |
+| `flake8` | `PyCQA/flake8` @ 7.1.1 | PEP 8 style violations, unused imports, undefined names | Outputs violation list; commit blocked until fixed |
+| `mypy` | `mirrors-mypy` @ v1.15.0 | Type annotation correctness in `src/` and `tests/` | Outputs type errors; commit blocked until resolved |
+| `pylint` | `PyCQA/pylint` @ v3.3.6 | Structural code quality in `src/` (missing docstrings disabled) | Outputs code smell warnings; commit blocked |
+
+---
+
+### `.env.example`
+
+**What it is:** A safe, committed template showing all environment variables the application reads.
+
+**What it does:** Documents every configuration variable with its name, example value, and inline comment explaining what it controls.
+
+**Why it exists:** The real `.env` file (which is `.gitignore`d) holds actual secrets. This template is the safe version that every developer can see and copy without leaking sensitive data.
+
+**How to use it:**
+```powershell
+Copy-Item .env.example .env   # Create your own .env from the template
+# Then edit .env with real values for your environment
+```
+
+| Variable | Default | What it controls | Validation rule |
+|---|---|---|---|
+| `APP_ENV` | `development` | Sets runtime mode used by config validation and log formatting | Must be `development`, `test`, or `production` |
+| `APP_DATA_DIR` | `data` | Root directory for scenario JSON files and simulation exports | Must be a valid path string |
+| `APP_LOG_LEVEL` | `INFO` | Controls how verbose the application logs are | Must be `DEBUG`, `INFO`, `WARNING`, `ERROR`, or `CRITICAL` |
+| `TEST_TIMEOUT_SECONDS` | `240` | Maximum seconds before pytest subprocess is killed | Must be a positive integer |
+| `ENABLE_REMOTE_METRICS` | `false` | Feature flag that activates optional telemetry integration | Parsed as boolean (`true`/`false`) |
+| `TELEMETRY_API_KEY` | *(empty)* | Secret key for external telemetry service | Required only when `ENABLE_REMOTE_METRICS=true` |
+| `DATABASE_PASSWORD` | *(empty)* | Placeholder for a future database integration | Optional; never logged anywhere |
+
+> **Security note:** `TELEMETRY_API_KEY` and `DATABASE_PASSWORD` must always remain empty in source control. Only populate them in your local `.env` or CI secret store.
+
+---
+
+### `pyrightconfig.json`
+
+**What it is:** Configuration file for [Pyright](https://github.com/microsoft/pyright) — the static type analysis engine used by VS Code's Pylance extension.
+
+**What it does:** Tells the type checker which files to analyze and how to resolve imports from `src/`.
+
+**Why it exists:** Without it, VS Code shows false "Import could not be resolved" errors for every `from app.config import ...` statement in `tests/`, because the tests are not run from an installed package — they rely on `src/` being on the Python path.
+
+```json
+{
+  "include": ["src", "tests"],    // Only type-check project code, not .venv
+  "executionEnvironments": [
+    {
+      "root": ".",
+      "extraPaths": ["src"]        // Adds src/ to import resolution — fixes all "unresolved import" warnings
+    }
+  ]
+}
+```
+
+| Setting | Purpose |
+|---|---|
+| `include` | Limits Pyright's scope to project files only |
+| `extraPaths: ["src"]` | Makes `from app.config import AppConfig` valid in both IDE and type checker |
+
+---
+
+### `.gitignore`
+
+**What it is:** A rules file telling Git which files and directories to never track.
+
+**What it does:** Prevents accidental commits of secrets, compiled bytecode, virtual environment binaries, IDE settings, test output artifacts, and OS-generated files.
+
+**Why it exists:** Keeps the repository clean, portable, and free of sensitive data. Every contributor works with identical source-only tracking.
+
+| Category excluded | Examples | Why excluded |
+|---|---|---|
+| Secrets | `.env` | Contains real API keys and passwords — must never be committed |
+| Virtual environments | `.venv/`, `venv/`, `env/` | Binary packages; reproducible via `requirements.txt` |
+| Compiled bytecode | `__pycache__/`, `*.pyc`, `*.pyo` | Auto-generated; differ by Python version and OS |
+| Test artifacts | `.coverage`, `htmlcov/`, `.pytest_cache/` | Generated on each run; not part of source |
+| Build artifacts | `dist/`, `build/`, `*.egg-info/` | Output of `pip install -e` or `python -m build` |
+| IDE settings | `.idea/`, `.vscode/extensions.json` | Personal editor preferences; not project-wide |
+| OS files | `.DS_Store`, `Thumbs.db`, `desktop.ini` | OS-generated metadata files with no project value |
+| Simulation outputs | `data/exports/*.json`, `data/scenarios/*.json` | Runtime data outputs; not source artifacts |
+
+---
+
+### `.github/workflows/ci.yml`
+
+**What it is:** A GitHub Actions workflow definition — the CI/CD pipeline configuration.
+
+**What it does:** Automatically runs the full quality pipeline every time code is pushed or a pull request is opened against `main` or `master`.
+
+**Why it exists:** Enforces consistent quality gates in the cloud. No one can accidentally merge broken, unformatted, or untested code without seeing a visible failure check on the pull request.
+
+**Pipeline stages (in order):**
+
+```
+Push / PR to main
+       │
+       ▼
+1. Checkout code + set up Python 3.11
+       │
+       ▼
+2. pip install -r requirements-dev.txt
+       │
+       ▼
+3. black --check .          → Format verification (fails if code not formatted)
+       │
+       ▼
+4. flake8 src/ tests/       → Lint check (fails on PEP 8 violations)
+       │
+       ▼
+5. mypy src/                → Type check (fails on type errors)
+       │
+       ▼
+6. pytest --cov=src         → Full test suite with coverage (fails on test failures)
+```
+
+| Stage | Tool | What failure means |
+|---|---|---|
+| Format | `black --check` | At least one file has unformatted code |
+| Lint | `flake8` | A style violation or undefined name exists |
+| Type check | `mypy` | A type annotation is incorrect or missing |
+| Tests | `pytest` | One or more tests fail or coverage drops |
 
