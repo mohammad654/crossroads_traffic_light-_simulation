@@ -14,7 +14,7 @@
 ![Build](https://img.shields.io/badge/CI-GitHub%20Actions-success)
 ![License](https://img.shields.io/badge/License-MIT-green)
 ![Tests](https://img.shields.io/badge/Tests-23%20passing-success)
-![Coverage](https://img.shields.io/badge/Coverage-26%25-orange)
+![Coverage](https://img.shields.io/badge/Coverage-90%25-brightgreen)
 
 ## Demo
 
