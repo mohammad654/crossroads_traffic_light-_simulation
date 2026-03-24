@@ -15,7 +15,9 @@ pytestmark = pytest.mark.unit
 
 
 def test_unit_test_command_build_and_success(mocker: pytest_mock.MockerFixture) -> None:
-    run_mock = mocker.patch("app.test_executor.subprocess.run", return_value=SimpleNamespace(returncode=0))
+    run_mock = mocker.patch(
+        "app.test_executor.subprocess.run", return_value=SimpleNamespace(returncode=0)
+    )
     executor = AppTestExecutor(timeout_seconds=10)
 
     result = executor.run_unit_tests()
@@ -30,7 +32,10 @@ def test_unit_test_command_build_and_success(mocker: pytest_mock.MockerFixture) 
 
 
 def test_timeout_returns_exit_code_124(mocker: pytest_mock.MockerFixture) -> None:
-    mocker.patch("app.test_executor.subprocess.run", side_effect=subprocess.TimeoutExpired(cmd="pytest", timeout=1))
+    mocker.patch(
+        "app.test_executor.subprocess.run",
+        side_effect=subprocess.TimeoutExpired(cmd="pytest", timeout=1),
+    )
     executor = AppTestExecutor(timeout_seconds=1)
 
     result = executor.run_all_tests()

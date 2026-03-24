@@ -8,22 +8,24 @@ from typing import Any, Dict, List, Optional
 
 LOGGER = logging.getLogger(__name__)
 
+
 class DataManager:
     """
     Manages data persistence for the simulation.
     Handles saving and loading intersection layouts, simulation states, and recordings.
     """
+
     def __init__(self, data_dir: str = "data"):
         self.data_dir = data_dir
         self.scenario_dir = os.path.join(self.data_dir, "scenarios")
         self.export_dir = os.path.join(self.data_dir, "exports")
         self.ensure_data_directory()
-        
+
         # Current recording data
         self.recording = False
         self.record_data: List[Dict[str, Any]] = []
         self.record_start_time = 0
-    
+
     def ensure_data_directory(self) -> None:
         """Ensure the data directory exists."""
         if not os.path.exists(self.data_dir):
@@ -31,11 +33,11 @@ class DataManager:
             LOGGER.info("Created data directory", extra={"data_dir": self.data_dir})
         os.makedirs(self.scenario_dir, exist_ok=True)
         os.makedirs(self.export_dir, exist_ok=True)
-    
+
     def save_intersection(self, intersection: Any, name: str) -> None:
         """
         Save an intersection layout to a file.
-        
+
         Args:
             intersection: The intersection object to save
             name: Name for the saved intersection
@@ -49,73 +51,77 @@ class DataManager:
             "bounds": intersection.bounds,
             "entry_points": intersection.entry_points,
             "exit_points": intersection.exit_points,
-            "traffic_light_positions": intersection.traffic_light_positions
+            "traffic_light_positions": intersection.traffic_light_positions,
         }
-        
+
         # Save to file
         filename = os.path.join(self.data_dir, f"intersection_{name}.json")
         with open(filename, "w", encoding="utf-8") as file_obj:
             json.dump(data, file_obj, indent=2)
 
         LOGGER.info("Saved intersection", extra={"file": filename})
-    
+
     def load_intersection(self, name: str) -> Optional[Any]:
         """
         Load an intersection layout from a file.
-        
+
         Args:
             name: Name of the intersection to load
-            
+
         Returns:
             An Intersection object, or None if the file doesn't exist
         """
         from simulation.intersection import Intersection
-        
+
         filename = os.path.join(self.data_dir, f"intersection_{name}.json")
         if not os.path.exists(filename):
             LOGGER.warning("Intersection file not found", extra={"file": filename})
             return None
-        
+
         with open(filename, "r", encoding="utf-8") as file_obj:
             data = json.load(file_obj)
-        
+
         # Create a new intersection with the loaded properties
         intersection = Intersection(data["width"], data["height"])
         intersection.center = tuple(data["center"])
         intersection.road_width = data["road_width"]
         intersection.bounds = tuple(data["bounds"])
-        
+
         # Convert string keys back to tuples where needed
-        intersection.entry_points = {k: tuple(v) for k, v in data["entry_points"].items()}
+        intersection.entry_points = {
+            k: tuple(v) for k, v in data["entry_points"].items()
+        }
         intersection.exit_points = {k: tuple(v) for k, v in data["exit_points"].items()}
-        intersection.traffic_light_positions = {k: tuple(v) for k, v in data["traffic_light_positions"].items()}
-        
+        intersection.traffic_light_positions = {
+            k: tuple(v) for k, v in data["traffic_light_positions"].items()
+        }
+
         LOGGER.info("Loaded intersection", extra={"file": filename})
         return intersection
-    
+
     def start_recording(self) -> None:
         """Start recording the simulation state."""
         self.recording = True
         self.record_data = []
         self.record_start_time = time.time()
         LOGGER.info("Started recording simulation")
-    
+
     def stop_recording(self) -> List[Dict[str, Any]]:
         """Stop recording and return the recorded data."""
         self.recording = False
         LOGGER.info("Stopped recording", extra={"frames": len(self.record_data)})
         return self.record_data
-    
+
     def record_frame(self, simulation: Any) -> None:
         """
         Record the current state of the simulation.
-        
+
         Args:
             simulation: The simulation object to record
         """
         if not self.recording:
             return
-        
+
         # Create a snapshot of the current state
         frame = {
             "timestamp": time.time() - self.record_start_time,
@@ -123,18 +129,18 @@ class DataManager:
             "traffic_lights": {
                 direction: light.state.name
                 for direction, light in simulation.traffic_lights.items()
-            }
+            },
         }
-        
+
         self.record_data.append(frame)
-    
+
     def _serialize_vehicle(self, vehicle: Any) -> Dict[str, Any]:
         """
         Convert a vehicle object to a serializable dictionary.
-        
+
         Args:
             vehicle: The vehicle to serialize
-            
+
         Returns:
             Dictionary representation of the vehicle
         """
@@ -145,33 +151,33 @@ class DataManager:
             "direction": vehicle.direction,
             "target_direction": vehicle.target_direction,
             "velocity": vehicle.velocity,
-            "rotation": vehicle.rotation
+            "rotation": vehicle.rotation,
         }
-    
+
     def save_recording(self, name: str) -> None:
         """
         Save the current recording to a file.
-        
+
         Args:
             name: Name for the saved recording
         """
         if not self.record_data:
             LOGGER.warning("No recording data to save")
             return
-        
+
         filename = os.path.join(self.data_dir, f"recording_{name}.json")
         with open(filename, "w", encoding="utf-8") as file_obj:
             json.dump(self.record_data, file_obj, indent=2)
 
         LOGGER.info("Saved recording", extra={"file": filename})
-    
+
     def load_recording(self, name: str) -> Optional[List[Dict[str, Any]]]:
         """
         Load a recording from a file.
-        
+
         Args:
             name: Name of the recording to load
-            
+
         Returns:
             List of recorded frames, or None if the file doesn't exist
         """
@@ -179,7 +185,7 @@ class DataManager:
         if not os.path.exists(filename):
             LOGGER.warning("Recording file not found", extra={"file": filename})
             return None
-        
+
         with open(filename, "r", encoding="utf-8") as file_obj:
             data = json.load(file_obj)
 
@@ -216,20 +222,20 @@ class DataManager:
                 "traffic_density_factor": 1.0,
                 "rush_hour_mode": False,
                 "weather_mode": "clear",
-                "algorithm": "adaptive"
+                "algorithm": "adaptive",
             },
             "rush_hour": {
                 "traffic_density_factor": 1.9,
                 "rush_hour_mode": True,
                 "weather_mode": "clear",
-                "algorithm": "traffic_responsive"
+                "algorithm": "traffic_responsive",
             },
             "special_event": {
                 "traffic_density_factor": 2.2,
                 "rush_hour_mode": True,
                 "weather_mode": "rain",
-                "algorithm": "ml_optimized"
-            }
+                "algorithm": "ml_optimized",
+            },
         }
 
     def export_simulation_results(self, file_name: str, payload: Dict[str, Any]) -> str:

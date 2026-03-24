@@ -44,12 +44,16 @@ def _print_test_result(result: TestResult) -> int:
     style = "green" if result.succeeded else "red"
     status = "PASSED" if result.succeeded else "FAILED"
 
-    table = Table(title="Test Execution Result", show_header=True, header_style="bold cyan")
+    table = Table(
+        title="Test Execution Result", show_header=True, header_style="bold cyan"
+    )
     table.add_column("Suite", style="cyan")
     table.add_column("Status", style=style)
     table.add_column("Exit Code")
     table.add_column("Duration (s)")
-    table.add_row(result.name, status, str(result.exit_code), f"{result.duration_seconds:.2f}")
+    table.add_row(
+        result.name, status, str(result.exit_code), f"{result.duration_seconds:.2f}"
+    )
 
     CONSOLE.print(table)
     return result.exit_code
@@ -65,11 +69,15 @@ def _interactive_menu(executor: TestExecutor) -> int:
     }
 
     while True:
-        CONSOLE.print(Panel.fit("Crossroads Simulation Runner", border_style="bright_blue"))
+        CONSOLE.print(
+            Panel.fit("Crossroads Simulation Runner", border_style="bright_blue")
+        )
         for key, (label, _) in actions.items():
             CONSOLE.print(f"[bold yellow]{key}[/bold yellow]. {label}")
 
-        choice = Prompt.ask("Select an option", choices=list(actions.keys()), default="1")
+        choice = Prompt.ask(
+            "Select an option", choices=list(actions.keys()), default="1"
+        )
 
         if choice == "5":
             CONSOLE.print("Exiting runner.", style="green")
@@ -86,15 +94,23 @@ def _build_parser() -> argparse.ArgumentParser:
         prog="python src/runner.py",
         description="Interactive runner for simulation and test suites.",
     )
-    parser.add_argument("--run-app", action="store_true", help="Run the full simulation application")
+    parser.add_argument(
+        "--run-app", action="store_true", help="Run the full simulation application"
+    )
     parser.add_argument("--unit-tests", action="store_true", help="Run unit tests only")
-    parser.add_argument("--integration-tests", action="store_true", help="Run integration tests only")
-    parser.add_argument("--all-tests", action="store_true", help="Run the full test suite")
+    parser.add_argument(
+        "--integration-tests", action="store_true", help="Run integration tests only"
+    )
+    parser.add_argument(
+        "--all-tests", action="store_true", help="Run the full test suite"
+    )
     return parser
 
 
 def _execute_args(args: argparse.Namespace, executor: TestExecutor) -> int:
-    selected = sum([args.run_app, args.unit_tests, args.integration_tests, args.all_tests])
+    selected = sum(
+        [args.run_app, args.unit_tests, args.integration_tests, args.all_tests]
+    )
     if selected > 1:
         CONSOLE.print("Please select only one non-interactive option.", style="red")
         return 2

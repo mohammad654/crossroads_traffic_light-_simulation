@@ -38,23 +38,31 @@ class AppConfig:
 
         app_env = os.getenv("APP_ENV", "development").strip().lower()
         if app_env not in {"development", "test", "production"}:
-            raise ConfigurationError("APP_ENV must be one of: development, test, production.")
+            raise ConfigurationError(
+                "APP_ENV must be one of: development, test, production."
+            )
 
         data_dir = Path(os.getenv("APP_DATA_DIR", "data")).resolve()
         log_level = os.getenv("APP_LOG_LEVEL", "INFO").strip().upper()
         if log_level not in {"DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"}:
-            raise ConfigurationError("APP_LOG_LEVEL must be one of: DEBUG, INFO, WARNING, ERROR, CRITICAL.")
+            raise ConfigurationError(
+                "APP_LOG_LEVEL must be one of: DEBUG, INFO, WARNING, ERROR, CRITICAL."
+            )
 
         timeout_str = os.getenv("TEST_TIMEOUT_SECONDS", "240").strip()
         if not timeout_str.isdigit() or int(timeout_str) <= 0:
             raise ConfigurationError("TEST_TIMEOUT_SECONDS must be a positive integer.")
 
-        enable_remote_metrics = os.getenv("ENABLE_REMOTE_METRICS", "false").strip().lower() in _TRUE_VALUES
+        enable_remote_metrics = (
+            os.getenv("ENABLE_REMOTE_METRICS", "false").strip().lower() in _TRUE_VALUES
+        )
         telemetry_api_key = os.getenv("TELEMETRY_API_KEY")
         database_password = os.getenv("DATABASE_PASSWORD")
 
         if enable_remote_metrics and not telemetry_api_key:
-            raise ConfigurationError("TELEMETRY_API_KEY is required when ENABLE_REMOTE_METRICS=true.")
+            raise ConfigurationError(
+                "TELEMETRY_API_KEY is required when ENABLE_REMOTE_METRICS=true."
+            )
 
         return cls(
             app_env=app_env,

@@ -13,14 +13,16 @@ pytestmark = pytest.mark.security
 
 
 SUSPICIOUS_PATTERNS = [
-    "api_key = \"",
-    "password = \"",
-    "token = \"",
-    "secret = \"",
+    'api_key = "',
+    'password = "',
+    'token = "',
+    'secret = "',
 ]
 
 
-def test_safe_summary_does_not_expose_secret_values(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_safe_summary_does_not_expose_secret_values(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     monkeypatch.setenv("ENABLE_REMOTE_METRICS", "true")
     monkeypatch.setenv("TELEMETRY_API_KEY", "top-secret-token")
     config = AppConfig.from_env()

@@ -59,15 +59,22 @@ class TestExecutor:
             *extra_args,
         ]
 
-        LOGGER.info("Starting test run", extra={"suite": name, "command": " ".join(cmd)})
+        LOGGER.info(
+            "Starting test run", extra={"suite": name, "command": " ".join(cmd)}
+        )
         start = time.perf_counter()
 
         try:
             completed = subprocess.run(cmd, check=False, timeout=self.timeout_seconds)
             code = completed.returncode
         except subprocess.TimeoutExpired:
-            LOGGER.error("Test run timed out", extra={"suite": name, "timeout": self.timeout_seconds})
+            LOGGER.error(
+                "Test run timed out",
+                extra={"suite": name, "timeout": self.timeout_seconds},
+            )
             code = 124
 
         duration = time.perf_counter() - start
-        return TestResult(name=name, exit_code=code, duration_seconds=duration, command=tuple(cmd))
+        return TestResult(
+            name=name, exit_code=code, duration_seconds=duration, command=tuple(cmd)
+        )

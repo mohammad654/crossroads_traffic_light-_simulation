@@ -10,6 +10,7 @@ from simulation.intersection import Intersection
 
 class Pedestrian:
     """Simple pedestrian entity for crosswalk traffic."""
+
     def __init__(self, position, direction):
         self.position = position
         self.direction = direction
@@ -17,11 +18,15 @@ class Pedestrian:
 
     def update(self, dt):
         dx, dy = self.direction
-        self.position = (self.position[0] + dx * self.speed * dt, self.position[1] + dy * self.speed * dt)
+        self.position = (
+            self.position[0] + dx * self.speed * dt,
+            self.position[1] + dy * self.speed * dt,
+        )
 
 
 class PedestrianSignal:
     """Represents a pedestrian walk/don't-walk signal for one crossing axis."""
+
     def __init__(self, crossing, position):
         self.crossing = crossing
         self.position = position
@@ -40,6 +45,7 @@ class SimulationManager:
     Manages the overall simulation, including vehicles, traffic lights,
     and their interactions at the intersection.
     """
+
     def __init__(self, traffic_controller):
         self.traffic_controller = traffic_controller
         self.intersection = Intersection()
@@ -90,11 +96,11 @@ class SimulationManager:
         self.playback_frames = []
         self.playback_index = 0
         self.playback_active = False
-        
+
         # Initialize traffic lights
         self.setup_traffic_lights()
         self.setup_pedestrian_signals()
-        
+
     def setup_traffic_lights(self):
         """Set up the traffic lights at the intersection."""
         # Create traffic lights for each direction
@@ -102,9 +108,9 @@ class SimulationManager:
             "north": TrafficLight("north", self.intersection.get_position("north")),
             "south": TrafficLight("south", self.intersection.get_position("south")),
             "east": TrafficLight("east", self.intersection.get_position("east")),
-            "west": TrafficLight("west", self.intersection.get_position("west"))
+            "west": TrafficLight("west", self.intersection.get_position("west")),
         }
-        
+
         # Register traffic lights with the controller
         for direction, light in self.traffic_lights.items():
             self.traffic_controller.register_traffic_light(light)
@@ -115,9 +121,9 @@ class SimulationManager:
         half_h = self.intersection.height / 2
         self.pedestrian_signals = {
             "ns_cross": PedestrianSignal("ns_cross", (center_x, center_y - half_h - 8)),
-            "ew_cross": PedestrianSignal("ew_cross", (center_x + half_w + 8, center_y))
+            "ew_cross": PedestrianSignal("ew_cross", (center_x + half_w + 8, center_y)),
         }
-    
+
     def toggle_pause(self):
         """Toggle the paused state of the simulation."""
         self.paused = not self.paused
@@ -205,24 +211,28 @@ class SimulationManager:
         avg_wait = self.compute_avg_wait_time()
         self.priority_request = self.compute_priority_request()
         self.v2i_messages = [v.v2i_message for v in self.vehicles if v.v2i_message]
-        
+
         # Update traffic lights
-        self.traffic_controller.update(dt_scaled, {
-            "queue_lengths": queue_lengths,
-            "queue_weighted": queue_weighted,
-            "avg_wait_time": avg_wait,
-            "throughput_last_window": self.throughput_last_window,
-            "weather": self.weather_mode,
-            "rush_hour": self.rush_hour_mode,
-            "priority_request": self.priority_request,
-            "coordination_offset": 5.0 + 2.0 * math_sin_wave(self.elapsed_time, 40.0)
-        })
+        self.traffic_controller.update(
+            dt_scaled,
+            {
+                "queue_lengths": queue_lengths,
+                "queue_weighted": queue_weighted,
+                "avg_wait_time": avg_wait,
+                "throughput_last_window": self.throughput_last_window,
+                "weather": self.weather_mode,
+                "rush_hour": self.rush_hour_mode,
+                "priority_request": self.priority_request,
+                "coordination_offset": 5.0
+                + 2.0 * math_sin_wave(self.elapsed_time, 40.0),
+            },
+        )
 
         walk_states = self.traffic_controller.get_pedestrian_walk_states()
         for crossing, can_walk in walk_states.items():
             if crossing in self.pedestrian_signals:
                 self.pedestrian_signals[crossing].set_walk(can_walk)
-        
+
         # Spawn new vehicles
         if self.spawn_timer >= self.spawn_interval:
             self.spawn_timer = 0
@@ -238,7 +248,7 @@ class SimulationManager:
             self.pedestrian_timer = 0.0
             self.spawn_pedestrian(walk_states)
             self.pedestrian_interval = random.uniform(2.5, 5.5)
-        
+
         # Update vehicle positions and behaviors
         self.update_vehicles(dt_scaled)
         self.update_pedestrians(dt_scaled)
@@ -253,7 +263,7 @@ class SimulationManager:
 
         # Check for vehicles that have left the simulation area
         self.remove_out_of_bounds_vehicles()
-    
+
     def spawn_vehicle(self):
         """Spawn a new vehicle at one of the entry points."""
         directions = ["north", "south", "east", "west"]
@@ -261,7 +271,12 @@ class SimulationManager:
 
         # Realistic traffic mix: mostly cars, occasional trucks/buses/motorcycles.
         vehicle_type = random.choices(
-            [VehicleType.CAR, VehicleType.TRUCK, VehicleType.BUS, VehicleType.MOTORCYCLE],
+            [
+                VehicleType.CAR,
+                VehicleType.TRUCK,
+                VehicleType.BUS,
+                VehicleType.MOTORCYCLE,
+            ],
             weights=[0.68, 0.12, 0.10, 0.10],
         )[0]
 
@@ -278,14 +293,16 @@ class SimulationManager:
                 if going_straight
                 else self.intersection.get_turning_lane_index(entry_direction)
             )
-        spawn_position = self.intersection.get_spawn_position(entry_direction, lane_index=lane_index, turning=turning)
-        
+        spawn_position = self.intersection.get_spawn_position(
+            entry_direction, lane_index=lane_index, turning=turning
+        )
+
         vehicle = Vehicle(
             vehicle_type=vehicle_type,
             position=spawn_position,
             direction=entry_direction,
             target_direction=target_direction,
-            lane_index=lane_index
+            lane_index=lane_index,
         )
 
         if self.can_spawn_vehicle(vehicle):
@@ -300,16 +317,20 @@ class SimulationManager:
                 continue
 
             if candidate_vehicle.direction in ["north", "south"]:
-                lateral_offset = abs(existing.position[0] - candidate_vehicle.position[0])
+                lateral_offset = abs(
+                    existing.position[0] - candidate_vehicle.position[0]
+                )
             else:
-                lateral_offset = abs(existing.position[1] - candidate_vehicle.position[1])
+                lateral_offset = abs(
+                    existing.position[1] - candidate_vehicle.position[1]
+                )
 
             if lateral_offset > 2.4:
                 continue
 
             gap = math.hypot(
                 existing.position[0] - candidate_vehicle.position[0],
-                existing.position[1] - candidate_vehicle.position[1]
+                existing.position[1] - candidate_vehicle.position[1],
             )
             if gap < min_spawn_gap:
                 return False
@@ -343,15 +364,15 @@ class SimulationManager:
             direction = (-1.0, 0.0)
 
         self.pedestrians.append(Pedestrian(position, direction))
-    
+
     def get_random_target_direction(self, entry_direction):
         """
         Get a destination direction for a spawned vehicle.
         Straight movement keeps the same heading label as entry_direction.
-        
+
         Args:
             entry_direction: The direction from which the vehicle entered
-            
+
         Returns:
             A target direction (straight or right-turn)
         """
@@ -359,33 +380,37 @@ class SimulationManager:
             "north": "east",
             "east": "south",
             "south": "west",
-            "west": "north"
+            "west": "north",
         }
 
         left_turn_direction = {
             "north": "west",
             "west": "south",
             "south": "east",
-            "east": "north"
+            "east": "north",
         }
 
         # Favor straight travel to keep the visualization readable and lane-stable.
         return random.choices(
-            [entry_direction, right_turn_direction[entry_direction], left_turn_direction[entry_direction]],
-            weights=[0.62, 0.24, 0.14]
+            [
+                entry_direction,
+                right_turn_direction[entry_direction],
+                left_turn_direction[entry_direction],
+            ],
+            weights=[0.62, 0.24, 0.14],
         )[0]
-    
+
     def update_vehicles(self, dt):
         """
         Update all vehicles in the simulation.
-        
+
         Args:
             dt: Delta time in seconds
         """
         for vehicle in self.vehicles:
             # Get the traffic light state for the vehicle's direction
             light_state = self.get_relevant_traffic_light_state(vehicle)
-            
+
             # Update the vehicle based on traffic light state and surroundings
             vehicle.update(
                 dt,
@@ -394,7 +419,7 @@ class SimulationManager:
                 self.intersection,
                 weather=self.weather_mode,
                 obstacles=[],
-                pedestrian_blocks=self.compute_pedestrian_blocks_for_vehicles()
+                pedestrian_blocks=self.compute_pedestrian_blocks_for_vehicles(),
             )
 
     def compute_pedestrian_blocks_for_vehicles(self):
@@ -403,15 +428,19 @@ class SimulationManager:
             if not signal.walk:
                 continue
             if crossing == "ns_cross":
-                blocks.extend([
-                    {"direction": "north", "distance": 8.0},
-                    {"direction": "south", "distance": 8.0}
-                ])
+                blocks.extend(
+                    [
+                        {"direction": "north", "distance": 8.0},
+                        {"direction": "south", "distance": 8.0},
+                    ]
+                )
             elif crossing == "ew_cross":
-                blocks.extend([
-                    {"direction": "east", "distance": 8.0},
-                    {"direction": "west", "distance": 8.0}
-                ])
+                blocks.extend(
+                    [
+                        {"direction": "east", "distance": 8.0},
+                        {"direction": "west", "distance": 8.0},
+                    ]
+                )
         return blocks
 
     def update_pedestrians(self, dt):
@@ -419,17 +448,16 @@ class SimulationManager:
             pedestrian.update(dt)
 
         self.pedestrians = [
-            p for p in self.pedestrians
-            if self.intersection.is_in_bounds(p.position)
+            p for p in self.pedestrians if self.intersection.is_in_bounds(p.position)
         ]
-    
+
     def get_relevant_traffic_light_state(self, vehicle):
         """
         Get the state of the traffic light relevant to the vehicle.
-        
+
         Args:
             vehicle: The vehicle to check
-            
+
         Returns:
             The state of the relevant traffic light
         """
@@ -438,7 +466,7 @@ class SimulationManager:
         if direction in self.traffic_lights:
             return self.traffic_lights[direction].state
         return LightState.RED  # Default to red if no relevant light
-    
+
     def remove_out_of_bounds_vehicles(self):
         """Remove vehicles that have left the simulation area."""
         in_bounds = []
@@ -453,7 +481,9 @@ class SimulationManager:
     def compute_queue_lengths(self):
         queues = {"ns": 0, "ew": 0}
         for vehicle in self.vehicles:
-            distance_to_line = self.intersection.distance_to_stop_line(vehicle.direction, vehicle.position)
+            distance_to_line = self.intersection.distance_to_stop_line(
+                vehicle.direction, vehicle.position
+            )
             if 0 <= distance_to_line <= 20 and vehicle.velocity < 2.0:
                 if vehicle.direction in ["north", "south"]:
                     queues["ns"] += 1
@@ -464,7 +494,9 @@ class SimulationManager:
     def compute_weighted_queue_lengths(self):
         weighted = {"ns": 0.0, "ew": 0.0}
         for vehicle in self.vehicles:
-            distance_to_line = self.intersection.distance_to_stop_line(vehicle.direction, vehicle.position)
+            distance_to_line = self.intersection.distance_to_stop_line(
+                vehicle.direction, vehicle.position
+            )
             if 0 <= distance_to_line <= 25:
                 weight = 1.0
                 if vehicle.direction in ["north", "south"]:
@@ -496,7 +528,9 @@ class SimulationManager:
                 self.congestion_heatmap[key] = self.congestion_heatmap.get(key, 0) + 1
 
         if len(self.congestion_heatmap) > 900:
-            sorted_points = sorted(self.congestion_heatmap.items(), key=lambda item: item[1], reverse=True)
+            sorted_points = sorted(
+                self.congestion_heatmap.items(), key=lambda item: item[1], reverse=True
+            )
             self.congestion_heatmap = dict(sorted_points[:900])
 
     def update_proximity_metrics(self):
@@ -508,22 +542,33 @@ class SimulationManager:
             for j in range(i + 1, len(self.vehicles)):
                 first = self.vehicles[i]
                 second = self.vehicles[j]
-                distance = math.hypot(first.position[0] - second.position[0], first.position[1] - second.position[1])
-                dynamic_threshold = max(2.5, 0.45 * (first.length + second.length) + 0.25 * (first.velocity + second.velocity))
+                distance = math.hypot(
+                    first.position[0] - second.position[0],
+                    first.position[1] - second.position[1],
+                )
+                dynamic_threshold = max(
+                    2.5,
+                    0.45 * (first.length + second.length)
+                    + 0.25 * (first.velocity + second.velocity),
+                )
                 if distance < dynamic_threshold:
                     close_calls += 1
                     first.too_close = True
                     second.too_close = True
 
         self.close_proximity_count = close_calls
-        average_speed = sum(v.velocity for v in self.vehicles) / max(1, len(self.vehicles))
+        average_speed = sum(v.velocity for v in self.vehicles) / max(
+            1, len(self.vehicles)
+        )
         self.avg_speed_history.append(average_speed)
         if len(self.avg_speed_history) > 300:
             self.avg_speed_history = self.avg_speed_history[-300:]
 
     def update_throughput_window(self, dt):
         if self.window_timer >= 8.0:
-            self.throughput_last_window = self.throughput_window_counter / self.window_timer
+            self.throughput_last_window = (
+                self.throughput_window_counter / self.window_timer
+            )
             self.throughput_history.append(self.throughput_last_window)
             if len(self.throughput_history) > 300:
                 self.throughput_history = self.throughput_history[-300:]
@@ -551,12 +596,14 @@ class SimulationManager:
             self.weather_mode = mode
 
     def add_obstacle(self, position, radius=6.0):
-        self.obstacles.append({
-            "position": position,
-            "radius": max(2.0, radius),
-            "kind": "obstacle",
-            "created_at": self.elapsed_time
-        })
+        self.obstacles.append(
+            {
+                "position": position,
+                "radius": max(2.0, radius),
+                "kind": "obstacle",
+                "created_at": self.elapsed_time,
+            }
+        )
 
     def clear_obstacles(self):
         self.obstacles = []
@@ -592,23 +639,26 @@ class SimulationManager:
             if event_type in ["accident", "road_closure"]:
                 event_pos = (
                     self.intersection.center[0] + random.uniform(-20, 20),
-                    self.intersection.center[1] + random.uniform(-20, 20)
+                    self.intersection.center[1] + random.uniform(-20, 20),
                 )
                 radius = 7.0 if event_type == "accident" else 10.0
                 self.add_obstacle(event_pos, radius)
             else:
                 self.weather_mode = random.choice(["rain", "fog", "snow", "clear"])
-            self.active_events.append({
-                "type": event_type,
-                "time": self.elapsed_time
-            })
+            self.active_events.append({"type": event_type, "time": self.elapsed_time})
 
-        self.active_events = [e for e in self.active_events if self.elapsed_time - e["time"] < 60.0]
+        self.active_events = [
+            e for e in self.active_events if self.elapsed_time - e["time"] < 60.0
+        ]
 
     def get_dashboard_metrics(self):
         ctrl = self.traffic_controller
-        phase_name = ctrl.phase_sequence[ctrl.phase_index] if ctrl.phase_sequence else "unknown"
-        phase_remaining = max(0.0, ctrl._get_phase_duration(phase_name) - ctrl.phase_timer)
+        phase_name = (
+            ctrl.phase_sequence[ctrl.phase_index] if ctrl.phase_sequence else "unknown"
+        )
+        phase_remaining = max(
+            0.0, ctrl._get_phase_duration(phase_name) - ctrl.phase_timer
+        )
         return {
             "avg_wait": self.compute_avg_wait_time(),
             "throughput": self.throughput_last_window,
@@ -621,7 +671,9 @@ class SimulationManager:
             "close_calls": self.close_proximity_count,
             "avg_speed": self.avg_speed_history[-1] if self.avg_speed_history else 0.0,
             "vehicle_mix": self.get_vehicle_mix(),
-            "pedestrian_signals": {k: v.state for k, v in self.pedestrian_signals.items()},
+            "pedestrian_signals": {
+                k: v.state for k, v in self.pedestrian_signals.items()
+            },
             "current_phase": phase_name,
             "phase_remaining": phase_remaining,
             "safety_violations": self.safety_violation_count,
@@ -645,9 +697,12 @@ class SimulationManager:
             "wait_history": self.wait_time_history,
             "throughput_history": self.throughput_history,
             "algorithm_comparison": self.algorithm_comparison,
-            "congestion_heatmap": [{"cell": [k[0], k[1]], "intensity": v} for k, v in self.congestion_heatmap.items()],
+            "congestion_heatmap": [
+                {"cell": [k[0], k[1]], "intensity": v}
+                for k, v in self.congestion_heatmap.items()
+            ],
             "active_events": self.active_events,
-            "v2i_message_count": len(self.v2i_messages)
+            "v2i_message_count": len(self.v2i_messages),
         }
         with open(file_path, "w", encoding="utf-8") as output_file:
             json.dump(payload, output_file, indent=2)
@@ -660,7 +715,8 @@ class SimulationManager:
             "weather_mode": self.weather_mode,
             "obstacles": self.obstacles,
             "algorithm": self.traffic_controller.algorithm,
-            "manual_override_active": self.traffic_controller.manual_override is not None
+            "manual_override_active": self.traffic_controller.manual_override
+            is not None,
         }
         with open(file_path, "w", encoding="utf-8") as scenario_file:
             json.dump(scenario, scenario_file, indent=2)
@@ -678,9 +734,21 @@ class SimulationManager:
 
     def apply_preconfigured_scenario(self, name):
         presets = {
-            "normal_day": {"traffic_density_factor": 1.0, "rush_hour_mode": False, "weather_mode": "clear"},
-            "rush_hour": {"traffic_density_factor": 1.8, "rush_hour_mode": True, "weather_mode": "clear"},
-            "special_event": {"traffic_density_factor": 2.2, "rush_hour_mode": True, "weather_mode": "rain"}
+            "normal_day": {
+                "traffic_density_factor": 1.0,
+                "rush_hour_mode": False,
+                "weather_mode": "clear",
+            },
+            "rush_hour": {
+                "traffic_density_factor": 1.8,
+                "rush_hour_mode": True,
+                "weather_mode": "clear",
+            },
+            "special_event": {
+                "traffic_density_factor": 2.2,
+                "rush_hour_mode": True,
+                "weather_mode": "rain",
+            },
         }
         preset = presets.get(name)
         if not preset:
@@ -692,4 +760,5 @@ class SimulationManager:
 
 def math_sin_wave(value, period):
     import math
+
     return math.sin((value / max(period, 1e-3)) * 2 * math.pi)

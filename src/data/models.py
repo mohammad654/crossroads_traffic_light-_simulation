@@ -11,6 +11,7 @@ class CrossroadConfiguration:
     """
     Configuration for a crossroad in the simulation.
     """
+
     def __init__(self, name: str):
         self.name = name
         self.lanes: Dict[str, Dict[str, object]] = {}
@@ -81,7 +82,7 @@ class CrossroadConfiguration:
             end = self.lanes[lane_id]["end_pos"]
             dx = end[0] - start[0]
             dy = end[1] - start[1]
-            length = (dx ** 2 + dy ** 2) ** 0.5
+            length = (dx**2 + dy**2) ** 0.5
             if length > 0:
                 return (dx / length, dy / length)
         return (1.0, 0.0)
@@ -91,13 +92,18 @@ class SimulationScenario:
     """
     Configuration for a simulation scenario.
     """
+
     def __init__(self, name: str, crossroad: CrossroadConfiguration):
         self.name = name
         self.crossroad = crossroad
         self.traffic_density = {lane_id: 10.0 for lane_id in crossroad.entry_lanes}
         self.vehicle_type_distribution = {"car": 0.8, "truck": 0.1, "motorcycle": 0.1}
         self.controller_type = "basic_clock"
-        self.controller_params = {"green_time": 30.0, "yellow_time": 3.0, "all_red_time": 2.0}
+        self.controller_params = {
+            "green_time": 30.0,
+            "yellow_time": 3.0,
+            "all_red_time": 2.0,
+        }
 
     def set_traffic_density(self, lane_id: str, vehicles_per_minute: float) -> None:
         if lane_id in self.traffic_density:

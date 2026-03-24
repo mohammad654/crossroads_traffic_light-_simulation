@@ -24,7 +24,9 @@ def valid_config(tmp_path):
     )
 
 
-def test_main_runs_unit_mode_from_cli(monkeypatch: pytest.MonkeyPatch, valid_config: AppConfig) -> None:
+def test_main_runs_unit_mode_from_cli(
+    monkeypatch: pytest.MonkeyPatch, valid_config: AppConfig
+) -> None:
     monkeypatch.setattr(runner.AppConfig, "from_env", lambda: valid_config)
     monkeypatch.setattr(runner, "_run_unit", lambda executor: 0)
 
@@ -33,7 +35,9 @@ def test_main_runs_unit_mode_from_cli(monkeypatch: pytest.MonkeyPatch, valid_con
     assert code == 0
 
 
-def test_main_rejects_multiple_noninteractive_modes(monkeypatch: pytest.MonkeyPatch, valid_config: AppConfig) -> None:
+def test_main_rejects_multiple_noninteractive_modes(
+    monkeypatch: pytest.MonkeyPatch, valid_config: AppConfig
+) -> None:
     monkeypatch.setattr(runner.AppConfig, "from_env", lambda: valid_config)
 
     code = runner.main(["--unit-tests", "--all-tests"])

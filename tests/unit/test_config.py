@@ -13,7 +13,9 @@ from app.exceptions import ConfigurationError
 pytestmark = pytest.mark.unit
 
 
-def test_config_loads_defaults_when_env_missing(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_config_loads_defaults_when_env_missing(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     monkeypatch.delenv("APP_ENV", raising=False)
     monkeypatch.delenv("APP_DATA_DIR", raising=False)
     monkeypatch.delenv("APP_LOG_LEVEL", raising=False)
@@ -28,7 +30,9 @@ def test_config_loads_defaults_when_env_missing(monkeypatch: pytest.MonkeyPatch)
     assert config.enable_remote_metrics is False
 
 
-def test_config_requires_telemetry_key_when_remote_enabled(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_config_requires_telemetry_key_when_remote_enabled(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     monkeypatch.setenv("ENABLE_REMOTE_METRICS", "true")
     monkeypatch.delenv("TELEMETRY_API_KEY", raising=False)
 

@@ -8,6 +8,7 @@ from simulation.traffic_light import LightState
 
 class VehicleType(Enum):
     """Legacy enum retained for compatibility with existing controls/stats."""
+
     CAR = auto()
     TRUCK = auto()
     MOTORCYCLE = auto()
@@ -21,40 +22,42 @@ class Vehicle:
     # Per-type body colour palettes  (R, G, B)
     _PALETTES = {
         VehicleType.CAR: [
-            (195, 60,  55),   # red
-            (55,  120, 200),  # blue
-            (60,  155, 75),   # green
-            (230, 180, 40),   # yellow
-            (130, 50,  180),  # purple
-            (245, 115, 40),   # orange
+            (195, 60, 55),  # red
+            (55, 120, 200),  # blue
+            (60, 155, 75),  # green
+            (230, 180, 40),  # yellow
+            (130, 50, 180),  # purple
+            (245, 115, 40),  # orange
             (220, 220, 225),  # silver
-            (28,  30,  35),   # black
+            (28, 30, 35),  # black
             (235, 235, 235),  # white
         ],
         VehicleType.TRUCK: [
-            (195, 140, 60),   # sand
-            (80,  90,  100),  # dark steel
-            (190, 80,  60),   # brick red
-            (60,  80,  60),   # army green
+            (195, 140, 60),  # sand
+            (80, 90, 100),  # dark steel
+            (190, 80, 60),  # brick red
+            (60, 80, 60),  # army green
         ],
         VehicleType.BUS: [
-            (240, 200, 40),   # yellow school
-            (55,  130, 200),  # city blue
-            (230, 80,  55),   # red bus
+            (240, 200, 40),  # yellow school
+            (55, 130, 200),  # city blue
+            (230, 80, 55),  # red bus
         ],
         VehicleType.MOTORCYCLE: [
-            (28,  30,  35),   # black
-            (195, 50,  50),   # sport red
-            (60,  100, 180),  # sport blue
+            (28, 30, 35),  # black
+            (195, 50, 50),  # sport red
+            (60, 100, 180),  # sport blue
             (220, 220, 220),  # silver
         ],
         VehicleType.EMERGENCY: [
-            (230, 40,  40),   # fire red
-            (45,  100, 205),  # police blue
+            (230, 40, 40),  # fire red
+            (45, 100, 205),  # police blue
         ],
     }
 
-    def __init__(self, vehicle_type, position, direction, target_direction, lane_index=0):
+    def __init__(
+        self, vehicle_type, position, direction, target_direction, lane_index=0
+    ):
         self.vehicle_type = vehicle_type
         self.position = position
         self.direction = direction
@@ -99,54 +102,54 @@ class Vehicle:
         vt = self.vehicle_type
 
         if vt == VehicleType.CAR:
-            self.length       = random.uniform(4.0, 4.9)
-            self.width        = random.uniform(1.75, 2.0)
-            max_speed_kmh     = random.uniform(45.0, 65.0)
-            self.max_acceleration        = random.uniform(2.5, 3.5)
-            self.comfortable_deceleration= random.uniform(3.0, 4.2)
-            self.max_deceleration        = random.uniform(6.0, 8.0)
+            self.length = random.uniform(4.0, 4.9)
+            self.width = random.uniform(1.75, 2.0)
+            max_speed_kmh = random.uniform(45.0, 65.0)
+            self.max_acceleration = random.uniform(2.5, 3.5)
+            self.comfortable_deceleration = random.uniform(3.0, 4.2)
+            self.max_deceleration = random.uniform(6.0, 8.0)
 
         elif vt == VehicleType.TRUCK:
-            self.length       = random.uniform(8.5, 13.0)
-            self.width        = random.uniform(2.4, 2.65)
-            max_speed_kmh     = random.uniform(35.0, 55.0)
-            self.max_acceleration        = random.uniform(0.9, 1.5)
-            self.comfortable_deceleration= random.uniform(2.2, 3.0)
-            self.max_deceleration        = random.uniform(4.5, 6.0)
+            self.length = random.uniform(8.5, 13.0)
+            self.width = random.uniform(2.4, 2.65)
+            max_speed_kmh = random.uniform(35.0, 55.0)
+            self.max_acceleration = random.uniform(0.9, 1.5)
+            self.comfortable_deceleration = random.uniform(2.2, 3.0)
+            self.max_deceleration = random.uniform(4.5, 6.0)
 
         elif vt == VehicleType.BUS:
-            self.length       = random.uniform(10.5, 14.0)
-            self.width        = random.uniform(2.5, 2.8)
-            max_speed_kmh     = random.uniform(30.0, 50.0)
-            self.max_acceleration        = random.uniform(0.8, 1.3)
-            self.comfortable_deceleration= random.uniform(2.0, 2.8)
-            self.max_deceleration        = random.uniform(4.0, 5.5)
+            self.length = random.uniform(10.5, 14.0)
+            self.width = random.uniform(2.5, 2.8)
+            max_speed_kmh = random.uniform(30.0, 50.0)
+            self.max_acceleration = random.uniform(0.8, 1.3)
+            self.comfortable_deceleration = random.uniform(2.0, 2.8)
+            self.max_deceleration = random.uniform(4.0, 5.5)
 
         elif vt == VehicleType.MOTORCYCLE:
-            self.length       = random.uniform(1.9, 2.4)
-            self.width        = random.uniform(0.75, 0.95)
-            max_speed_kmh     = random.uniform(50.0, 80.0)
-            self.max_acceleration        = random.uniform(3.5, 5.0)
-            self.comfortable_deceleration= random.uniform(4.0, 5.5)
-            self.max_deceleration        = random.uniform(7.0, 9.5)
+            self.length = random.uniform(1.9, 2.4)
+            self.width = random.uniform(0.75, 0.95)
+            max_speed_kmh = random.uniform(50.0, 80.0)
+            self.max_acceleration = random.uniform(3.5, 5.0)
+            self.comfortable_deceleration = random.uniform(4.0, 5.5)
+            self.max_deceleration = random.uniform(7.0, 9.5)
 
         elif vt == VehicleType.EMERGENCY:
-            self.length       = random.uniform(5.0, 6.5)
-            self.width        = random.uniform(2.0, 2.3)
-            max_speed_kmh     = random.uniform(70.0, 100.0)
-            self.max_acceleration        = random.uniform(4.0, 5.5)
-            self.comfortable_deceleration= random.uniform(4.5, 6.0)
-            self.max_deceleration        = random.uniform(8.0, 10.0)
+            self.length = random.uniform(5.0, 6.5)
+            self.width = random.uniform(2.0, 2.3)
+            max_speed_kmh = random.uniform(70.0, 100.0)
+            self.max_acceleration = random.uniform(4.0, 5.5)
+            self.comfortable_deceleration = random.uniform(4.5, 6.0)
+            self.max_deceleration = random.uniform(8.0, 10.0)
 
         else:  # fallback
-            self.length       = 4.5
-            self.width        = 1.9
-            max_speed_kmh     = 50.0
-            self.max_acceleration        = 2.8
-            self.comfortable_deceleration= 3.5
-            self.max_deceleration        = 7.0
+            self.length = 4.5
+            self.width = 1.9
+            max_speed_kmh = 50.0
+            self.max_acceleration = 2.8
+            self.comfortable_deceleration = 3.5
+            self.max_deceleration = 7.0
 
-        self.max_speed   = max_speed_kmh / 3.6
+        self.max_speed = max_speed_kmh / 3.6
         self.cruise_speed = self.max_speed * random.uniform(0.82, 0.95)
 
         palette = self._PALETTES.get(vt, self._PALETTES[VehicleType.CAR])
@@ -166,7 +169,16 @@ class Vehicle:
         angle = math.radians(self.rotation)
         return math.sin(angle), -math.cos(angle)
 
-    def update(self, dt, light_state, other_vehicles, intersection, weather="clear", obstacles=None, pedestrian_blocks=None):
+    def update(
+        self,
+        dt,
+        light_state,
+        other_vehicles,
+        intersection,
+        weather="clear",
+        obstacles=None,
+        pedestrian_blocks=None,
+    ):
         obstacles = obstacles or []
         pedestrian_blocks = pedestrian_blocks or []
         self.too_close = False
@@ -179,7 +191,9 @@ class Vehicle:
             if (
                 light_state == LightState.GREEN
                 and self.velocity < 0.2
-                and 0.0 <= intersection.distance_to_stop_line(self.direction, self.position) <= 12.0
+                and 0.0
+                <= intersection.distance_to_stop_line(self.direction, self.position)
+                <= 12.0
             ):
                 self.green_hold_timer = self.green_reaction_delay
             self.last_light_state = light_state
@@ -194,13 +208,17 @@ class Vehicle:
         }.get(weather, 1.0)
 
         # Lightly vary cruise speed over time to avoid robotic lockstep traffic.
-        behavior_mod = 1.0 + 0.045 * math.sin(self.behavior_timer * 0.45 + self.behavior_phase)
+        behavior_mod = 1.0 + 0.045 * math.sin(
+            self.behavior_timer * 0.45 + self.behavior_phase
+        )
         free_flow_target = self.cruise_speed * weather_speed_factor * behavior_mod
 
         signal_target = self.signal_target_speed(light_state, intersection)
         lead_target = self.lead_vehicle_target_speed(other_vehicles)
         block_target = self.blocked_box_target_speed(other_vehicles, intersection)
-        conflict_target = self.intersection_conflict_target_speed(other_vehicles, intersection)
+        conflict_target = self.intersection_conflict_target_speed(
+            other_vehicles, intersection
+        )
         obstacle_target = self.obstacle_target_speed(obstacles)
         crosswalk_target = self.crosswalk_target_speed(pedestrian_blocks)
 
@@ -219,14 +237,20 @@ class Vehicle:
         # First-order speed filter + jerk-limited acceleration for smoother longitudinal motion.
         settle = min(1.0, dt * self.speed_settle_rate)
         self.desired_speed += (target_speed - self.desired_speed) * settle
-        desired_acc = (self.desired_speed - self.velocity) / max(self.driver_reaction, 1e-3)
-        desired_acc = max(-self.max_deceleration, min(self.max_acceleration, desired_acc))
+        desired_acc = (self.desired_speed - self.velocity) / max(
+            self.driver_reaction, 1e-3
+        )
+        desired_acc = max(
+            -self.max_deceleration, min(self.max_acceleration, desired_acc)
+        )
 
         accel_delta = desired_acc - self.acceleration
         max_accel_delta = self.max_jerk * dt
         accel_delta = max(-max_accel_delta, min(max_accel_delta, accel_delta))
         self.acceleration += accel_delta
-        self.acceleration = max(-self.max_deceleration, min(self.max_acceleration, self.acceleration))
+        self.acceleration = max(
+            -self.max_deceleration, min(self.max_acceleration, self.acceleration)
+        )
 
         self.velocity += self.acceleration * dt
         self.velocity = max(0.0, min(self.velocity, self.max_speed))
@@ -246,7 +270,9 @@ class Vehicle:
             self.enforce_stop_line(light_state, intersection)
             self.apply_lane_alignment(intersection, dt)
 
-            if self.target_direction != self.direction and self.should_start_turn(intersection):
+            if self.target_direction != self.direction and self.should_start_turn(
+                intersection
+            ):
                 self.start_turning(intersection)
 
         self.v2i_message = {
@@ -261,7 +287,9 @@ class Vehicle:
             return False
         if not self.is_inside_intersection(intersection):
             return False
-        distance_to_line = intersection.distance_to_stop_line(self.direction, self.position)
+        distance_to_line = intersection.distance_to_stop_line(
+            self.direction, self.position
+        )
         return distance_to_line <= -0.7
 
     def apply_lane_alignment(self, intersection, dt):
@@ -323,7 +351,9 @@ class Vehicle:
 
     def is_approaching_intersection(self, intersection):
         center = intersection.center
-        distance = math.hypot(self.position[0] - center[0], self.position[1] - center[1])
+        distance = math.hypot(
+            self.position[0] - center[0], self.position[1] - center[1]
+        )
         return distance < 50.0 and not self.turning
 
     def is_inside_intersection(self, intersection):
@@ -331,13 +361,17 @@ class Vehicle:
         half_height = intersection.height / 2
         cx, cy = intersection.center
         x, y = self.position
-        return (cx - half_width <= x <= cx + half_width) and (cy - half_height <= y <= cy + half_height)
+        return (cx - half_width <= x <= cx + half_width) and (
+            cy - half_height <= y <= cy + half_height
+        )
 
     def react_to_traffic_light(self, light_state, intersection):
         return self.signal_target_speed(light_state, intersection) < 0.2
 
     def signal_target_speed(self, light_state, intersection):
-        distance_to_line = intersection.distance_to_stop_line(self.direction, self.position)
+        distance_to_line = intersection.distance_to_stop_line(
+            self.direction, self.position
+        )
 
         # Already past the stop line → always proceed at full speed.
         if distance_to_line < -0.45:
@@ -356,8 +390,10 @@ class Vehicle:
         # Commit-or-stop decision for YELLOW:
         #   If the vehicle can come to a comfortable stop before the line → stop.
         #   If already too close to stop safely → proceed (run the yellow).
-        stopping_distance = (self.velocity ** 2) / max(2.0 * self.comfortable_deceleration, 1e-3)
-        commit_threshold  = stopping_distance + max(2.5, self.velocity * 0.5)
+        stopping_distance = (self.velocity**2) / max(
+            2.0 * self.comfortable_deceleration, 1e-3
+        )
+        commit_threshold = stopping_distance + max(2.5, self.velocity * 0.5)
 
         if light_state == LightState.YELLOW:
             if distance_to_line < commit_threshold:
@@ -380,12 +416,16 @@ class Vehicle:
             return 0.0
 
         # Graduated braking: smooth power curve for natural deceleration feel.
-        normalized = max(0.0, min(1.0, (distance_to_line - 0.2) / max(caution_start, 1e-3)))
+        normalized = max(
+            0.0, min(1.0, (distance_to_line - 0.2) / max(caution_start, 1e-3))
+        )
         self.waiting_for_light = True
-        return self.max_speed * (normalized ** 1.6)
+        return self.max_speed * (normalized**1.6)
 
     def estimate_eta_to_stop_line(self, intersection):
-        distance = max(0.0, intersection.distance_to_stop_line(self.direction, self.position))
+        distance = max(
+            0.0, intersection.distance_to_stop_line(self.direction, self.position)
+        )
         speed = max(0.5, self.velocity)
         return distance / speed
 
@@ -413,7 +453,9 @@ class Vehicle:
             if lateral_offset > lane_tolerance:
                 continue
 
-            gap = self.longitudinal_progress(other.position) - self.longitudinal_progress(self.position)
+            gap = self.longitudinal_progress(
+                other.position
+            ) - self.longitudinal_progress(self.position)
             if gap <= 0.0:
                 continue
 
@@ -426,13 +468,15 @@ class Vehicle:
 
             if gap < dynamic_gap:
                 ratio = (gap - min_gap) / max(dynamic_gap - min_gap, 1e-3)
-                constrained = other.velocity * max(0.0, min(1.0, ratio ** 1.5))
+                constrained = other.velocity * max(0.0, min(1.0, ratio**1.5))
                 best_speed = min(best_speed, constrained)
 
         return best_speed
 
     def blocked_box_target_speed(self, other_vehicles, intersection):
-        distance_to_line = intersection.distance_to_stop_line(self.direction, self.position)
+        distance_to_line = intersection.distance_to_stop_line(
+            self.direction, self.position
+        )
         if not (0.0 <= distance_to_line <= 7.5):
             return self.max_speed
 
@@ -453,13 +497,16 @@ class Vehicle:
             if lateral_offset > lane_tolerance:
                 continue
 
-            gap = self.longitudinal_progress(other.position) - self.longitudinal_progress(self.position)
+            gap = self.longitudinal_progress(
+                other.position
+            ) - self.longitudinal_progress(self.position)
             if not (0.0 < gap < lookahead):
                 continue
 
             if other.velocity < 1.0 and (
                 other.is_inside_intersection(intersection)
-                or intersection.distance_to_stop_line(other.direction, other.position) < -1.0
+                or intersection.distance_to_stop_line(other.direction, other.position)
+                < -1.0
             ):
                 return 0.0
 
@@ -468,7 +515,9 @@ class Vehicle:
     def intersection_conflict_target_speed(self, other_vehicles, intersection):
         best_speed = self.max_speed
         center_x, center_y = intersection.center
-        own_distance_to_line = intersection.distance_to_stop_line(self.direction, self.position)
+        own_distance_to_line = intersection.distance_to_stop_line(
+            self.direction, self.position
+        )
         own_axis = "ns" if self.direction in ["north", "south"] else "ew"
         turning_now = self.target_direction != self.direction
         left_turning_now = self.is_left_turn(self.direction, self.target_direction)
@@ -477,10 +526,15 @@ class Vehicle:
             if other is self:
                 continue
 
-            distance = math.hypot(other.position[0] - self.position[0], other.position[1] - self.position[1])
+            distance = math.hypot(
+                other.position[0] - self.position[0],
+                other.position[1] - self.position[1],
+            )
             safety_radius = max(3.8, 0.5 * (self.length + other.length))
 
-            if self.is_inside_intersection(intersection) and other.is_inside_intersection(intersection):
+            if self.is_inside_intersection(
+                intersection
+            ) and other.is_inside_intersection(intersection):
                 if distance < safety_radius:
                     return 0.0
                 if distance < safety_radius * 1.75:
@@ -493,15 +547,22 @@ class Vehicle:
                 if not other.is_inside_intersection(intersection):
                     continue
 
-                center_distance = math.hypot(other.position[0] - center_x, other.position[1] - center_y)
-                if center_distance <= max(intersection.width, intersection.height) * 0.48:
+                center_distance = math.hypot(
+                    other.position[0] - center_x, other.position[1] - center_y
+                )
+                if (
+                    center_distance
+                    <= max(intersection.width, intersection.height) * 0.48
+                ):
                     return 0.0
 
             # Turning vehicles yield to straight cross-traffic near the stop line.
             if turning_now and 0.0 <= own_distance_to_line <= 8.0:
                 other_axis = "ns" if other.direction in ["north", "south"] else "ew"
                 if other_axis != own_axis and other.target_direction == other.direction:
-                    other_distance = intersection.distance_to_stop_line(other.direction, other.position)
+                    other_distance = intersection.distance_to_stop_line(
+                        other.direction, other.position
+                    )
                     if -2.5 <= other_distance <= 5.0:
                         if other.velocity > 0.8:
                             return min(best_speed, self.cruise_speed * 0.05)
@@ -509,8 +570,13 @@ class Vehicle:
             # Dedicated rule: left turns yield to opposing straight movement.
             if left_turning_now and 0.0 <= own_distance_to_line <= 12.0:
                 opposing_direction = self.opposite_direction(self.direction)
-                if other.direction == opposing_direction and other.target_direction == other.direction:
-                    other_distance = intersection.distance_to_stop_line(other.direction, other.position)
+                if (
+                    other.direction == opposing_direction
+                    and other.target_direction == other.direction
+                ):
+                    other_distance = intersection.distance_to_stop_line(
+                        other.direction, other.position
+                    )
                     if -4.0 <= other_distance <= 14.0 and other.velocity > 0.5:
                         return 0.0
 
@@ -612,13 +678,17 @@ class Vehicle:
 
         start, control, end = self.path
         self.turn_distance += max(0.0, self.velocity * dt)
-        self.turn_progress = max(0.0, min(1.0, self.turn_distance / max(self.turn_length, 1e-3)))
+        self.turn_progress = max(
+            0.0, min(1.0, self.turn_distance / max(self.turn_length, 1e-3))
+        )
         t = self.turn_progress
 
         self.position = self.bezier_point(start, control, end, t)
         tangent_x, tangent_y = self.bezier_tangent(start, control, end, t)
         if abs(tangent_x) > 1e-4 or abs(tangent_y) > 1e-4:
-            self.rotation = (math.degrees(math.atan2(tangent_x, -tangent_y)) + 360.0) % 360.0
+            self.rotation = (
+                math.degrees(math.atan2(tangent_x, -tangent_y)) + 360.0
+            ) % 360.0
 
         if t >= 1.0:
             self.turning = False
@@ -634,12 +704,16 @@ class Vehicle:
         self.turn_started = True
         self.turn_progress = 0.0
         self.turn_distance = 0.0
-        self.exit_lane_index = intersection.get_turning_lane_index(self.target_direction)
+        self.exit_lane_index = intersection.get_turning_lane_index(
+            self.target_direction
+        )
         self.path = intersection.get_turn_path(self.direction, self.target_direction)
         if self.path:
             self.path[0] = self.position
         if len(self.path) >= 3:
-            self.turn_length = self.estimate_turn_length(self.path[0], self.path[1], self.path[2])
+            self.turn_length = self.estimate_turn_length(
+                self.path[0], self.path[1], self.path[2]
+            )
 
     def draw(self, surface, camera_offset=(0, 0), scale=1.0):
         screen_x = self.position[0] * scale + camera_offset[0]
@@ -660,41 +734,67 @@ class Vehicle:
         surf_h = car_l + 6
         car_surface = pygame.Surface((surf_w, surf_h), pygame.SRCALPHA)
 
-        ox, oy = 3, 3   # drawing origin inside the surface
+        ox, oy = 3, 3  # drawing origin inside the surface
 
-        body_color   = self.color
-        darker       = tuple(max(12, c - 28) for c in body_color)
-        brighter     = tuple(min(255, c + 38) for c in body_color)
-        wheel_color  = (28, 30, 36)
+        body_color = self.color
+        darker = tuple(max(12, c - 28) for c in body_color)
+        brighter = tuple(min(255, c + 38) for c in body_color)
+        wheel_color = (28, 30, 36)
         window_color = (168, 198, 228)
-        window_dark  = (130, 160, 190)
+        window_dark = (130, 160, 190)
 
         vt = self.vehicle_type
 
         if vt == VehicleType.MOTORCYCLE:
             # — Slender profile —
             body_rect = pygame.Rect(ox + car_w // 4, oy, car_w // 2, car_l)
-            pygame.draw.rect(car_surface, body_color, body_rect, border_radius=max(1, car_w // 4))
+            pygame.draw.rect(
+                car_surface, body_color, body_rect, border_radius=max(1, car_w // 4)
+            )
             # wheels
             w_r = max(2, car_w // 3)
-            pygame.draw.circle(car_surface, wheel_color, (ox + car_w // 2, oy + w_r), w_r)
-            pygame.draw.circle(car_surface, wheel_color, (ox + car_w // 2, oy + car_l - w_r), w_r)
+            pygame.draw.circle(
+                car_surface, wheel_color, (ox + car_w // 2, oy + w_r), w_r
+            )
+            pygame.draw.circle(
+                car_surface, wheel_color, (ox + car_w // 2, oy + car_l - w_r), w_r
+            )
             # rider silhouette
-            rider_rect = pygame.Rect(ox + car_w // 4 + 1, oy + int(car_l * 0.25), int(car_w * 0.5), int(car_l * 0.45))
+            rider_rect = pygame.Rect(
+                ox + car_w // 4 + 1,
+                oy + int(car_l * 0.25),
+                int(car_w * 0.5),
+                int(car_l * 0.45),
+            )
             pygame.draw.ellipse(car_surface, darker, rider_rect)
 
         elif vt in (VehicleType.BUS, VehicleType.TRUCK):
             # — Box / slab body —
             body_rect = pygame.Rect(ox, oy, car_w, car_l)
-            pygame.draw.rect(car_surface, body_color, body_rect, border_radius=max(2, int(car_w * 0.12)))
+            pygame.draw.rect(
+                car_surface,
+                body_color,
+                body_rect,
+                border_radius=max(2, int(car_w * 0.12)),
+            )
             # Roof stripe
             stripe = pygame.Rect(ox + 2, oy + 2, car_w - 4, max(3, int(car_l * 0.08)))
             pygame.draw.rect(car_surface, brighter, stripe, border_radius=2)
             # Windshield
-            ws = pygame.Rect(ox + 2, oy + max(2, int(car_l * 0.06)), car_w - 4, max(3, int(car_l * 0.12)))
+            ws = pygame.Rect(
+                ox + 2,
+                oy + max(2, int(car_l * 0.06)),
+                car_w - 4,
+                max(3, int(car_l * 0.12)),
+            )
             pygame.draw.rect(car_surface, window_color, ws, border_radius=2)
             # Rear window
-            rw = pygame.Rect(ox + 2, oy + car_l - max(4, int(car_l * 0.12)), car_w - 4, max(3, int(car_l * 0.10)))
+            rw = pygame.Rect(
+                ox + 2,
+                oy + car_l - max(4, int(car_l * 0.12)),
+                car_w - 4,
+                max(3, int(car_l * 0.10)),
+            )
             pygame.draw.rect(car_surface, window_dark, rw, border_radius=2)
             # Side windows (bus)
             if vt == VehicleType.BUS:
@@ -702,53 +802,149 @@ class Vehicle:
                 win_y_start = oy + int(car_l * 0.22)
                 for wi in range(3):
                     wy = win_y_start + wi * (win_h + max(2, int(car_l * 0.07)))
-                    pygame.draw.rect(car_surface, window_color, pygame.Rect(ox + 1, wy, car_w - 2, win_h), border_radius=1)
+                    pygame.draw.rect(
+                        car_surface,
+                        window_color,
+                        pygame.Rect(ox + 1, wy, car_w - 2, win_h),
+                        border_radius=1,
+                    )
             # Wheels
             wheel_w = max(2, int(car_w * 0.16))
             wheel_l_front = max(3, int(car_l * 0.14))
-            wheel_l_rear  = max(3, int(car_l * 0.18))
+            wheel_l_rear = max(3, int(car_l * 0.18))
             for wx_off in (0, car_w + 2 - wheel_w):
-                pygame.draw.rect(car_surface, wheel_color, pygame.Rect(ox - 1 + wx_off, oy + 4, wheel_w, wheel_l_front), border_radius=1)
-                pygame.draw.rect(car_surface, wheel_color, pygame.Rect(ox - 1 + wx_off, oy + car_l - 4 - wheel_l_rear, wheel_w, wheel_l_rear), border_radius=1)
+                pygame.draw.rect(
+                    car_surface,
+                    wheel_color,
+                    pygame.Rect(ox - 1 + wx_off, oy + 4, wheel_w, wheel_l_front),
+                    border_radius=1,
+                )
+                pygame.draw.rect(
+                    car_surface,
+                    wheel_color,
+                    pygame.Rect(
+                        ox - 1 + wx_off,
+                        oy + car_l - 4 - wheel_l_rear,
+                        wheel_w,
+                        wheel_l_rear,
+                    ),
+                    border_radius=1,
+                )
 
         else:
             # — Standard car / emergency — rounded sedan shape —
-            body_rect     = pygame.Rect(ox, oy, car_w, car_l)
-            roof_rect     = pygame.Rect(ox + int(car_w * 0.15), oy + int(car_l * 0.22), int(car_w * 0.70), int(car_l * 0.54))
-            windshield    = pygame.Rect(ox + int(car_w * 0.18), oy + int(car_l * 0.12), int(car_w * 0.64), int(car_l * 0.14))
-            rear_window   = pygame.Rect(ox + int(car_w * 0.18), oy + int(car_l * 0.73), int(car_w * 0.64), int(car_l * 0.11))
+            body_rect = pygame.Rect(ox, oy, car_w, car_l)
+            roof_rect = pygame.Rect(
+                ox + int(car_w * 0.15),
+                oy + int(car_l * 0.22),
+                int(car_w * 0.70),
+                int(car_l * 0.54),
+            )
+            windshield = pygame.Rect(
+                ox + int(car_w * 0.18),
+                oy + int(car_l * 0.12),
+                int(car_w * 0.64),
+                int(car_l * 0.14),
+            )
+            rear_window = pygame.Rect(
+                ox + int(car_w * 0.18),
+                oy + int(car_l * 0.73),
+                int(car_w * 0.64),
+                int(car_l * 0.11),
+            )
 
-            pygame.draw.rect(car_surface, body_color, body_rect, border_radius=max(2, int(car_w * 0.30)))
-            pygame.draw.rect(car_surface, darker,     roof_rect, border_radius=max(2, int(car_w * 0.22)))
+            pygame.draw.rect(
+                car_surface,
+                body_color,
+                body_rect,
+                border_radius=max(2, int(car_w * 0.30)),
+            )
+            pygame.draw.rect(
+                car_surface, darker, roof_rect, border_radius=max(2, int(car_w * 0.22))
+            )
             pygame.draw.rect(car_surface, window_color, windshield, border_radius=2)
-            pygame.draw.rect(car_surface, window_dark,  rear_window, border_radius=2)
+            pygame.draw.rect(car_surface, window_dark, rear_window, border_radius=2)
 
             # Wheels
             wheel_w = max(2, int(car_w * 0.17))
             wheel_l = max(3, int(car_l * 0.20))
             for wx_off in (0, car_w + 2 - wheel_w):
-                pygame.draw.rect(car_surface, wheel_color, pygame.Rect(ox - 1 + wx_off, oy + 3, wheel_w, wheel_l), border_radius=1)
-                pygame.draw.rect(car_surface, wheel_color, pygame.Rect(ox - 1 + wx_off, oy + car_l - 3 - wheel_l, wheel_w, wheel_l), border_radius=1)
+                pygame.draw.rect(
+                    car_surface,
+                    wheel_color,
+                    pygame.Rect(ox - 1 + wx_off, oy + 3, wheel_w, wheel_l),
+                    border_radius=1,
+                )
+                pygame.draw.rect(
+                    car_surface,
+                    wheel_color,
+                    pygame.Rect(
+                        ox - 1 + wx_off, oy + car_l - 3 - wheel_l, wheel_w, wheel_l
+                    ),
+                    border_radius=1,
+                )
 
             # Emergency light bar
             if vt == VehicleType.EMERGENCY:
-                bar_rect = pygame.Rect(ox + int(car_w * 0.2), oy + int(car_l * 0.18), int(car_w * 0.6), max(2, int(car_l * 0.06)))
-                flash = (int(self.behavior_timer * 4) % 2 == 0)
-                pygame.draw.rect(car_surface, (240, 40, 40) if flash else (60, 60, 240), bar_rect, border_radius=1)
+                bar_rect = pygame.Rect(
+                    ox + int(car_w * 0.2),
+                    oy + int(car_l * 0.18),
+                    int(car_w * 0.6),
+                    max(2, int(car_l * 0.06)),
+                )
+                flash = int(self.behavior_timer * 4) % 2 == 0
+                pygame.draw.rect(
+                    car_surface,
+                    (240, 40, 40) if flash else (60, 60, 240),
+                    bar_rect,
+                    border_radius=1,
+                )
 
         # Headlights & taillights
-        light_w  = max(2, int(car_w * 0.22))
+        light_w = max(2, int(car_w * 0.22))
         headlight = (248, 244, 200)
         taillight = (255, 55, 44) if self.brake_lights_on else (140, 28, 28)
         if vt != VehicleType.MOTORCYCLE:
-            pygame.draw.rect(car_surface, headlight, pygame.Rect(ox + 1, oy + 1, light_w, max(2, int(car_l * 0.04))), border_radius=1)
-            pygame.draw.rect(car_surface, headlight, pygame.Rect(ox + car_w - light_w - 1, oy + 1, light_w, max(2, int(car_l * 0.04))), border_radius=1)
-            pygame.draw.rect(car_surface, taillight,  pygame.Rect(ox + 1, oy + car_l - max(2, int(car_l * 0.04)) - 1, light_w, max(2, int(car_l * 0.04))), border_radius=1)
-            pygame.draw.rect(car_surface, taillight,  pygame.Rect(ox + car_w - light_w - 1, oy + car_l - max(2, int(car_l * 0.04)) - 1, light_w, max(2, int(car_l * 0.04))), border_radius=1)
+            pygame.draw.rect(
+                car_surface,
+                headlight,
+                pygame.Rect(ox + 1, oy + 1, light_w, max(2, int(car_l * 0.04))),
+                border_radius=1,
+            )
+            pygame.draw.rect(
+                car_surface,
+                headlight,
+                pygame.Rect(
+                    ox + car_w - light_w - 1, oy + 1, light_w, max(2, int(car_l * 0.04))
+                ),
+                border_radius=1,
+            )
+            pygame.draw.rect(
+                car_surface,
+                taillight,
+                pygame.Rect(
+                    ox + 1,
+                    oy + car_l - max(2, int(car_l * 0.04)) - 1,
+                    light_w,
+                    max(2, int(car_l * 0.04)),
+                ),
+                border_radius=1,
+            )
+            pygame.draw.rect(
+                car_surface,
+                taillight,
+                pygame.Rect(
+                    ox + car_w - light_w - 1,
+                    oy + car_l - max(2, int(car_l * 0.04)) - 1,
+                    light_w,
+                    max(2, int(car_l * 0.04)),
+                ),
+                border_radius=1,
+            )
 
         # ── Rotate and blit ──────────────────────────────────────────────────
         rotated = pygame.transform.rotate(car_surface, -self.rotation)
-        rect    = rotated.get_rect(center=(int(screen_x), int(screen_y)))
+        rect = rotated.get_rect(center=(int(screen_x), int(screen_y)))
         surface.blit(rotated, rect.topleft)
 
         # Subtle dark overlay while stopped
