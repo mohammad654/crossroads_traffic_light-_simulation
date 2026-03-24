@@ -136,14 +136,18 @@ class Renderer:
             Slider(
                 10.0,
                 60.0,
-                self.simulation.traffic_controller.default_phase_durations["ns_green"],
+                self.simulation.traffic_controller.default_phase_durations[
+                    "ns_green"
+                ],
                 "NS Green (s)",
                 step=1.0,
             ),
             Slider(
                 10.0,
                 60.0,
-                self.simulation.traffic_controller.default_phase_durations["ew_green"],
+                self.simulation.traffic_controller.default_phase_durations[
+                    "ew_green"
+                ],
                 "EW Green (s)",
                 step=1.0,
             ),
@@ -188,7 +192,9 @@ class Renderer:
         self.scenario_preset_rects = {}
 
         self.simulation.traffic_controller.set_algorithm("time_based")
-        self.algorithms = list(self.simulation.traffic_controller.available_algorithms)
+        self.algorithms = list(
+            self.simulation.traffic_controller.available_algorithms
+        )
         self.algorithm_descriptions = {
             "time_based": "Fixed cycle timing",
             "traffic_responsive": "Queue-responsive split",
@@ -228,7 +234,8 @@ class Renderer:
         }
         for algorithm in self.algorithms:
             self.tooltip_map[f"alg_{algorithm}"] = self.algorithm_descriptions.get(
-                algorithm, "Traffic control algorithm"
+                algorithm,
+                "Traffic control algorithm",
             )
 
     def add_notification(self, message, kind="info", ttl=2.0):

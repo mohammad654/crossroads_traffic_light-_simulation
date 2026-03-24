@@ -56,7 +56,9 @@ class TrafficLightController:
 
         # Lightweight online-learning model (bandit-like)
         self.ml_candidate_greens = [18.0, 22.0, 26.0, 30.0]
-        self.ml_scores = {duration: 0.0 for duration in self.ml_candidate_greens}
+        self.ml_scores = {
+            duration: 0.0 for duration in self.ml_candidate_greens
+        }
         self.ml_counts = {duration: 1 for duration in self.ml_candidate_greens}
         self.ml_last_duration = 24.0
 
@@ -66,7 +68,12 @@ class TrafficLightController:
 
         # Comparative metrics
         self.algorithm_metrics = defaultdict(
-            lambda: {"cycles": 0, "avg_queue": 0.0, "avg_delay": 0.0, "throughput": 0.0}
+            lambda: {
+                "cycles": 0,
+                "avg_queue": 0.0,
+                "avg_delay": 0.0,
+                "throughput": 0.0,
+            }
         )
 
     def register_traffic_light(self, traffic_light):
@@ -119,9 +126,12 @@ class TrafficLightController:
         self._update_algorithm_metrics(context)
 
     def _get_phase_duration(self, phase_name):
-        weather_factor = {"clear": 1.0, "rain": 1.12, "fog": 1.15, "snow": 1.2}.get(
-            self.weather_mode, 1.0
-        )
+        weather_factor = {
+            "clear": 1.0,
+            "rain": 1.12,
+            "fog": 1.15,
+            "snow": 1.2,
+        }.get(self.weather_mode, 1.0)
 
         rush_factor = 0.93 if self.rush_hour_mode else 1.0
 
@@ -229,15 +239,17 @@ class TrafficLightController:
         ew_score = float(queue_weighted.get("ew", 0))
 
         learning_rate = 0.035
-        self.adaptive_memory["ns"] = (1 - learning_rate) * self.adaptive_memory[
-            "ns"
-        ] + learning_rate * ns_score
-        self.adaptive_memory["ew"] = (1 - learning_rate) * self.adaptive_memory[
-            "ew"
-        ] + learning_rate * ew_score
+        self.adaptive_memory["ns"] = (
+            (1 - learning_rate) * self.adaptive_memory["ns"] + learning_rate * ns_score
+        )
+        self.adaptive_memory["ew"] = (
+            (1 - learning_rate) * self.adaptive_memory["ew"] + learning_rate * ew_score
+        )
 
         imbalance = self.adaptive_memory["ns"] - self.adaptive_memory["ew"]
-        self.adaptive_bias["ns"] = max(-4.0, min(4.0, 0.55 * imbalance))
+        self.adaptive_bias["ns"] = max(
+            -4.0, min(4.0, 0.55 * imbalance)
+        )
         self.adaptive_bias["ew"] = -self.adaptive_bias["ns"]
 
         ns_score += self.adaptive_bias["ns"]
@@ -282,14 +294,18 @@ class TrafficLightController:
             d = self.ml_last_duration
             self.ml_counts[d] += 1
             alpha = 1.0 / self.ml_counts[d]
-            self.ml_scores[d] = (1 - alpha) * self.ml_scores[d] + alpha * reward
+            self.ml_scores[d] = (
+                (1 - alpha) * self.ml_scores[d] + alpha * reward
+            )
 
             # UCB-like choice
             exploration = max(1.0, sum(self.ml_counts.values()))
             best_duration = self.ml_candidate_greens[0]
             best_value = float("-inf")
             for candidate in self.ml_candidate_greens:
-                bonus = (2.0 * (exploration**0.5)) / (self.ml_counts[candidate] ** 0.5)
+                bonus = (
+                    2.0 * (exploration ** 0.5)
+                ) / (self.ml_counts[candidate] ** 0.5)
                 value = self.ml_scores[candidate] + bonus
                 if value > best_value:
                     best_value = value
@@ -299,7 +315,8 @@ class TrafficLightController:
         self.current_phase_durations = self.default_phase_durations.copy()
         self.current_phase_durations["ns_green"] = self.ml_last_duration
         self.current_phase_durations["ew_green"] = max(
-            16.0, 48.0 - self.ml_last_duration
+            16.0,
+            48.0 - self.ml_last_duration,
         )
         self._advance_phase_machine(dt)
 
