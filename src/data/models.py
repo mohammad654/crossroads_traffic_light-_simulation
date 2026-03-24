@@ -4,7 +4,7 @@ Data Models Module
 This module defines the data structures used throughout the simulation.
 """
 
-from typing import Dict, List, Tuple
+from typing import Any, Dict, List, Tuple
 
 
 class CrossroadConfiguration:
@@ -14,7 +14,7 @@ class CrossroadConfiguration:
 
     def __init__(self, name: str):
         self.name = name
-        self.lanes: Dict[str, Dict[str, object]] = {}
+        self.lanes: Dict[str, Dict[str, Any]] = {}
         self.entry_lanes: List[str] = []
         self.exit_lanes: List[str] = []
         self.traffic_lights: Dict[str, Dict[str, Tuple[float, float]]] = {}

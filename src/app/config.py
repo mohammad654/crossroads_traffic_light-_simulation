@@ -5,12 +5,16 @@ from __future__ import annotations
 import os
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Optional
+from typing import Callable, Optional
 
 from app.exceptions import ConfigurationError
 
+load_dotenv: Optional[Callable[..., bool]]
+
 try:
-    from dotenv import load_dotenv
+    from dotenv import load_dotenv as _load_dotenv
+
+    load_dotenv = _load_dotenv
 except ImportError:  # pragma: no cover - safe fallback if dependency is unavailable
     load_dotenv = None
 

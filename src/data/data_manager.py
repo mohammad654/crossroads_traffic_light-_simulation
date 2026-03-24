@@ -24,7 +24,7 @@ class DataManager:
         # Current recording data
         self.recording = False
         self.record_data: List[Dict[str, Any]] = []
-        self.record_start_time = 0
+        self.record_start_time = 0.0
 
     def ensure_data_directory(self) -> None:
         """Ensure the data directory exists."""
