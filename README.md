@@ -394,6 +394,31 @@ Expected behavior:
 
 ### B. Detailed Usage
 
+### C. How the App Works at Runtime
+
+When you start the simulation, the app follows this flow:
+
+1. `runner.py` loads and validates environment configuration from `.env` and OS variables.
+2. Logging is initialized using `APP_LOG_LEVEL` so startup and runtime events are visible.
+3. The application creates core services:
+       - `SimulationManager` for vehicles, timing, and updates
+       - `TrafficLightController` for signal algorithms and phase changes
+       - `SafetyChecker` for conflict prevention checks
+       - `Renderer` for drawing the intersection and UI in Pygame
+       - `DataManager` for scenario/save/export persistence
+4. The main loop runs at a steady frame rate and repeats:
+       - Read keyboard/mouse input
+       - Update traffic state (`dt` step)
+       - Apply signal logic and safety rules
+       - Render the updated frame and analytics overlays
+5. On user actions (save/export/test modes), the app writes data to configured output folders.
+6. On exit, resources are cleaned up and the runner returns a process exit code.
+
+What you should see while it is working:
+- Terminal menu and status output from the runner
+- Live simulation window with moving vehicles and changing signals
+- Optional generated JSON artifacts in the data/output folders when exporting or saving
+
 #### Interactive Menu Mode
 ```powershell
 python .\src\runner.py
