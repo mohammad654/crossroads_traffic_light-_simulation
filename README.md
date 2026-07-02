@@ -18,12 +18,16 @@
 
 ## Demo
 
-<video src="./Crossroads%20Traffic%20Light%20Simulation.mp4?raw=1" controls width="900"></video>
+<video src="./media/simulation_demo.mp4" controls width="900"></video>
 
 If the inline player is not supported in your viewer, open the demo directly:
-[Crossroads Traffic Light Simulation.mp4 (raw)](./Crossroads%20Traffic%20Light%20Simulation.mp4?raw=1)
+[▶ Watch simulation_demo.mp4](./media/simulation_demo.mp4)
 
-Note: GitHub may show “we can’t display files this big” on the file page for large videos. This is expected; use the raw link above to view or download the video.
+**Screenshots:**
+
+![Screenshot 1](./media/screenshot_1.png)
+![Screenshot 2](./media/screenshot_2.png)
+![Screenshot 3](./media/screenshot_3.png)
 
 Quick links: [Documentation](docs/ci_cd_suggestions.md) | [Architecture](#4-architecture--how-it-works) | [Issues](../../issues) | [Contributing](#15-contributing-guidelines)
 
